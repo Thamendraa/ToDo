@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>main</title>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <style>
+    .line {
+      position: relative;
+      display: inline-block;
+    }
+
+    .line::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: black;
+      transition: width 0.3s ease;
+      transform: translateY(-50%);
+    }
+
+    .line::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: 0;
+      width: 0;
+      height: 2px;
+      background-color: black;
+      transition: width 0.3s ease;
+      transform: translateY(-50%);
+    }
+
+    input[type="radio"]:checked~span.line::before,
+    input[type="radio"]:checked~span.line::after {
+      width: 50%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top" style="text-align: center; padding: 20px;">
+    <h3 style="font-family: cursive;">To Do List</h3>
+  </div>
+  <%view.forEach (view=>{%>
+  <div class="w3-card-4" style="width: 500px; margin: 0 auto;">
+    <header class="w3-container w3-light-grey">
+      <h3 style="text-align: center; margin: 0;"><%-view.date%></h3>
+    </header>
+    <div class="w3-container" style="padding: 20px;">
+      <label>
+        <input class="w3-radio" type="radio" name="completed" value="complete">
+        <span class="line" style="font-size: 12px;"><%-view.task%></span>
+      </label>
+    </div>
+    <button class="w3-button w3-block w3-dark-grey" style="margin-bottom: 16px;" onclick="addTask()">+ Add</button>
+  </div>
+  <%})%>
+</body>
+  <script>
+    function addTask() {
+      window.location.href = "/addTask";
+    }
+  </script>
+</html>
