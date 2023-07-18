@@ -27,11 +27,7 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
- db.task = require("./taskModel.js")(sequelize, DataTypes);
-// db.reviews = require("./reviewModel.js")(sequelize, DataTypes);
-
-// db.sequelize.sync({ force: false }).then(() => {
-//   console.log("yes re-sync done");
-// });
+db.task = require("./taskModel.js")(sequelize, DataTypes);
+db.USER = require("./usersModel.js")(sequelize, DataTypes);
 
 module.exports = db;

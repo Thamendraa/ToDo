@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define("user", {
-    FullName: {
+    displayName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -8,8 +8,20 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    password: {
+    Image: {
       type: DataTypes.STRING,
+      allowNull: true,
+    },
+    googleId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    otp: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    is_oauth_user: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
     },
   });
