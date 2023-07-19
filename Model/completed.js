@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Task = sequelize.define("task", {
+  const Completed = sequelize.define("completed", {
     task: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -13,5 +13,5 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
   });
-  return Task;
+  return Completed;
 };

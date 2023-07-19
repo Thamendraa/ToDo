@@ -25,6 +25,9 @@
   "dependencies": {
   
     
+  "connect-flash": "^0.1.1",
+  
+    
   "cookie-session": "^2.0.0",
   
     
@@ -38,6 +41,12 @@
   
     
   "express-session": "^1.17.3",
+  
+    
+  "js-datepicker": "^5.18.2",
+  
+    
+  "moment": "^2.29.4",
   
     
   "mysql2": "^3.4.0",

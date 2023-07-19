@@ -7,11 +7,15 @@ const dotenv = require("dotenv").config();
 const session = require("express-session");
 require("./Services/passport");
 const db = require("./Model/index");
+const tc = require("./Controller/taskController");
+const moment = require("moment");
+const flash = require("connect-flash");
 
 db.sequelize.sync({ force: false }); //datbabase link
 app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use(
   session({
     secret: "GOOGLE_Clent_SECRECT", // Replace with your own secret key
@@ -56,6 +60,14 @@ app.get("/auth/callback/success", (req, res) => {
 app.get("/auth/callback/failure", (req, res) => {
   res.send("Error");
 });
+
+// view
+app.post("/addTask", tc.addTask);
+app.get("/nav", tc.rendernav);
+app.get("/complete/:id", tc.taskCompleted);
+app.get("/delete/:id", tc.deleteTask);
+app.get("/nav/:status", tc.renderStatusTasks);
+app.get("/completd/:status", tc.renderStatusTasks);
 
 app.listen(port, () => {
   console.log("TO-DO List started at port 4001");

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task List</title>
+  <!-- Add Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Add FontAwesome icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Custom CSS to style the task list */
+      /* Sidebar styles */
+      .sidebar {
+        background-color: #2a2a72;
+        color: #fff;
+        padding: 20px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+  
+      .user-photo {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 10px;
+      }
+  
+      .user-name {
+        font-size: 18px;
+        font-weight: bold;
+      }
+  
+      .user-info {
+        display: flex;
+        align-items: center;
+      }
+  
+      .user-info .user-name {
+        margin-left: 10px;
+      }
+  
+      .sidebar-links {
+        margin-top: 20px;
+      }
+  
+      .sidebar-links a {
+        color: #fff;
+        text-decoration: none;
+        display: block;
+        padding: 5px 0;
+      }
+  
+      .sidebar-links a:hover {
+        text-decoration: underline;
+        color: #ffc107; /* Change the hover color to yellow (#ffc107) */
+      }
+  
+    .task-list {
+        margin-top: 20px;
+      margin: 20px auto;
+      max-width: 900px;
+    }
+    .task-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      background-color: #c3e6cb; /* Green background color */
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    .task-item span {
+      margin-right: 10px;
+    }
+    .icon {
+      color: #333;
+    }
+    .icon:hover {
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+          <!-- Sidebar -->
+          <div class="col-md-3 p-0">
+            <div class="sidebar">
+              <div class="user-info">
+                <img src="path_to_user_photo.jpg" alt="User Photo" class="user-photo">
+                <div class="user-name">John Doe</div>
+              </div>
+              <div class="sidebar-links">
+                <a href="/nav/all">All Tasks</a>
+                <a href="/nav/pending">Pending Tasks</a>
+                <a href="completed">Completed Tasks</a>
+              </div>
+            </div>
+          </div>
+    <!-- completed -->
+  <div class="container">
+    <h1>Completed Task</h1>
+    <div class="task-list">
+      <%task.forEach(task => { %>
+        <div class="task-item">
+          <span><%= task.task %></span>
+          <span><%= moment(task.date).format('dddd, MMMM D, YYYY') %></span>
+          <a href="/delete/<%= task.id %>" class="icon"><i class="fas fa-trash"></i></a>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</body>
+</html>
