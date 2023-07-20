@@ -1,22 +1,28 @@
-const { name } = require("ejs");
 const db = require("../Model/index");
 const Task = db.task;
-const Complete = db.completed;
+const flash = require("connect-flash");
 const path = require("path");
 const moment = require("moment");
-const flash = require("connect-flash");
 
 exports.renderAddTask = async (req, res) => {
-  res.render("addTask");
+  res.render("addTask", { user: req.user });
 };
+
 exports.rendernav = async (req, res) => {
   try {
     const view = await Task.findAll({
-      order: [["date", "ASC"]], // Sort by "date" column in descending order
+      where: {
+        user_id: req.user.id,
+      },
+      order: [["date", "ASC"]],
     });
     const message = req.flash();
-
-    res.render("nav", { task: view, moment: moment, msg: message, blogs });
+    res.render("nav", {
+      msg: message,
+      task: view,
+      moment: moment,
+      user: req.user,
+    });
   } catch (error) {
     console.log("Error fetching tasks:", error);
     res.status(500).send("Error fetching tasks");
@@ -28,16 +34,17 @@ exports.addTask = async (req, res) => {
 
   const { date, task } = req.body;
   if (new Date(date) < new Date()) {
+    req.flash("failure", "PAST IS PAST NOT ALLOWED ");
     res.redirect("/nav");
     console.log("date passed");
     return;
   }
   Task.create({
     task,
-    date,
+    date: date,
     completed: false,
+    user_id: req.user.id,
   });
-  req.flash("failure", "Past is past focus on future ");
   res.redirect("nav");
 };
 
@@ -55,33 +62,52 @@ exports.taskCompleted = async (req, res) => {
   console.log("Task is Completed successfully");
   res.redirect("/nav/completed");
 };
+
 exports.renderStatusTasks = async (req, res) => {
   const { status } = req.params;
+  const userId = req.user.id; // Assuming you have the user ID available in req.user
 
   let tasks;
   if (status === "completed") {
     tasks = await Task.findAll({
       where: {
         completed: true,
+        user_id: userId,
       },
     });
-    res.render("completed", { task: tasks, moment: moment });
   } else if (status === "pending") {
     tasks = await Task.findAll({
       where: {
         completed: false,
+        user_id: userId,
+      },
+    });
+  } else if (status === "missed") {
+    tasks = await Task.findAll({
+      where: {
+        completed: false,
+        date: {
+          [db.Sequelize.Op.lt]: moment().startOf("day").toDate(),
+        },
+        user_id: userId,
       },
     });
   } else {
-    tasks = await Task.findAll();
+    tasks = await Task.findAll({
+      where: {
+        user_id: userId,
+      },
+    });
   }
 
   res.render("nav", {
     task: tasks,
     moment: moment,
     selectedFilter: status,
+    user: req.user,
   });
 };
+
 exports.deleteTask = async (req, res) => {
   try {
     const list = await Task.destroy({
@@ -95,4 +121,17 @@ exports.deleteTask = async (req, res) => {
   }
 
   res.redirect("/nav");
+};
+
+exports.googleLogin = (req, res) => {
+  res.render("singup");
+};
+
+exports.googleLogout = (req, res) => {
+  req.logOut((err) => {
+    if (err) {
+      console.error("Error while logging out:", err);
+    }
+    res.redirect("/");
+  });
 };

@@ -5,11 +5,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     date: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATE,
       allowNull: false,
     },
     completed: {
       type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+    user_id: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
   });

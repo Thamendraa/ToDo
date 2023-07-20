@@ -8,6 +8,7 @@ const session = require("express-session");
 require("./Services/passport");
 const db = require("./Model/index");
 const tc = require("./Controller/taskController");
+const uc = require("./Controller/userController");
 const moment = require("moment");
 const flash = require("connect-flash");
 
@@ -15,12 +16,13 @@ db.sequelize.sync({ force: false }); //datbabase link
 app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(flash());
 
 app.use(
   session({
     secret: "GOOGLE_Clent_SECRECT", // Replace with your own secret key
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
@@ -53,22 +55,31 @@ app.get(
 // Success
 app.get("/auth/callback/success", (req, res) => {
   if (!req.user) res.redirect("/auth/callback/failure");
-  res.send("Welcome " + req.user.email);
+  res.redirect("/nav");
 });
 
 // Failure
 app.get("/auth/callback/failure", (req, res) => {
-  res.send("Error");
+  res.redirect("/");
 });
 
-// view
-app.post("/addTask", tc.addTask);
-app.get("/nav", tc.rendernav);
-app.get("/complete/:id", tc.taskCompleted);
-app.get("/delete/:id", tc.deleteTask);
-app.get("/nav/:status", tc.renderStatusTasks);
-app.get("/completd/:status", tc.renderStatusTasks);
+checkAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect("/nav");
+};
 
+app.post("/singup", tc.googleLogin);
+
+// view
+app.get("/nav", checkAuthenticated, tc.rendernav);
+app.post("/addTask", checkAuthenticated, tc.addTask);
+app.get("/complete/:id", checkAuthenticated, tc.taskCompleted);
+app.get("/delete/:id", checkAuthenticated, tc.deleteTask);
+app.get("/nav/:status", checkAuthenticated, tc.renderStatusTasks);
+app.get("/completed/:status", checkAuthenticated, tc.renderStatusTasks);
+app.get("/logout", checkAuthenticated, tc.googleLogout);
 app.listen(port, () => {
   console.log("TO-DO List started at port 4001");
 });
